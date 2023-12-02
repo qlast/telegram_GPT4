@@ -1,4 +1,4 @@
-import java.io.*;//ss
+import java.io.*;
 
 public class Properties {
     private String telegramToken;

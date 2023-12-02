@@ -1,3 +1,4 @@
+import com.google.gson.JsonSyntaxException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -44,7 +45,7 @@ public class ChatBot extends TelegramLongPollingBot {
             Message receivedMessage = update.getMessage();
             SendMessage message = new SendMessage();
             String answer = "";
-          //  System.out.println(userMessagxe);
+            //  System.out.println(userMessagxe);
 
             String chatType = receivedMessage.getChat().getType();
             System.out.println(chatType);
@@ -90,6 +91,7 @@ public class ChatBot extends TelegramLongPollingBot {
         }
 
     }
+
     public String getGPT4Response(String prompt) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -125,17 +127,27 @@ public class ChatBot extends TelegramLongPollingBot {
     }
 
     public String extractContentFromJson(String jsonResponse) {
-        JsonParser parser = new JsonParser();
-        JsonObject json = parser.parse(jsonResponse).getAsJsonObject();
-       // System.out.println(json);
-        String content = json.getAsJsonArray("choices")
-                .get(0)
-                .getAsJsonObject()
-                .getAsJsonObject("message")
-                .get("content")
-                .getAsString();
+        try {
+            JsonParser parser = new JsonParser();
+            JsonObject json = parser.parse(jsonResponse).getAsJsonObject();
 
-        return content;
+            // Вывод содержимого JSON для отладки
+            System.out.println("JSON Response: " + json);
+
+            String content = json.getAsJsonArray("choices")
+                    .get(0)
+                    .getAsJsonObject()
+                    .getAsJsonObject("message")
+                    .get("content")
+                    .getAsString();
+
+            return content;
+        } catch (JsonSyntaxException e) {
+            // Логирование ошибки разбора JSON
+            System.err.println("Error parsing JSON response: " + jsonResponse);
+            e.printStackTrace();
+            return "Error parsing JSON response";
+        }
     }
 
 }
