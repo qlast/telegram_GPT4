@@ -1,3 +1,4 @@
+import com.google.gson.JsonArray;
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -126,28 +127,60 @@ public class ChatBot extends TelegramLongPollingBot {
         }
     }
 
-    public String extractContentFromJson(String jsonResponse) {
-        try {
-            JsonParser parser = new JsonParser();
-            JsonObject json = parser.parse(jsonResponse).getAsJsonObject();
+//    public String extractContentFromJson(String jsonResponse) {
+//        try {
+//            JsonParser parser = new JsonParser();
+//            JsonObject json = parser.parse(jsonResponse).getAsJsonObject();
+//
+//            // Вывод содержимого JSON для отладки
+//            System.out.println("JSON Response: " + json);
+//
+//            String content = json.getAsJsonArray("choices")
+//                    .get(0)
+//                    .getAsJsonObject()
+//                    .getAsJsonObject("message")
+//                    .get("content")
+//                    .getAsString();
+//
+//            return content;
+//        } catch (JsonSyntaxException e) {
+//            // Логирование ошибки разбора JSON
+//            System.err.println("Error parsing JSON response: " + jsonResponse);
+//            e.printStackTrace();
+//            return "Error parsing JSON response";
+//        }
+//    }
+public String extractContentFromJson(String jsonResponse) {
+    try {
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(jsonResponse).getAsJsonObject();
 
-            // Вывод содержимого JSON для отладки
-            System.out.println("JSON Response: " + json);
+        // Проверка существования массива "choices"
+        if (json.has("choices") && json.get("choices").isJsonArray()) {
+            JsonArray choicesArray = json.getAsJsonArray("choices");
 
-            String content = json.getAsJsonArray("choices")
-                    .get(0)
-                    .getAsJsonObject()
-                    .getAsJsonObject("message")
-                    .get("content")
-                    .getAsString();
+            // Проверка наличия элементов в массиве "choices"
+            if (choicesArray.size() > 0) {
+                JsonObject firstChoice = choicesArray.get(0).getAsJsonObject();
 
-            return content;
-        } catch (JsonSyntaxException e) {
-            // Логирование ошибки разбора JSON
-            System.err.println("Error parsing JSON response: " + jsonResponse);
-            e.printStackTrace();
-            return "Error parsing JSON response";
+                // Проверка существования объекта "message"
+                if (firstChoice.has("message") && firstChoice.get("message").isJsonObject()) {
+                    JsonObject messageObject = firstChoice.getAsJsonObject("message");
+
+                    // Проверка существования свойства "content"
+                    if (messageObject.has("content")) {
+                        String content = messageObject.get("content").getAsString();
+                        return content;
+                    }
+                }
+            }
         }
-    }
 
+        return "Invalid JSON structure"; // Или другое сообщение об ошибке
+    } catch (JsonSyntaxException e) {
+        System.err.println("Error parsing JSON response: " + jsonResponse);
+        e.printStackTrace();
+        return "Error parsing JSON response";
+    }
+}
 }
