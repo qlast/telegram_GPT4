@@ -1,7 +1,6 @@
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,10 +12,8 @@ import org.apache.http.entity.StringEntity;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.util.EntityUtils;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ChatBot extends TelegramLongPollingBot {
     private final Properties properties = new Properties();
@@ -47,14 +44,14 @@ public class ChatBot extends TelegramLongPollingBot {
           //  System.out.println(userMessagxe);
 
             String chatType = receivedMessage.getChat().getType();
-            System.out.println(chatType);
+            //System.out.println(chatType); /**логирует запросы*/
             long userId = update.getMessage().getFrom().getId();
 
             if (chatType.contains("group")) {
                 if (userMessage.equalsIgnoreCase("да") || userMessage.equalsIgnoreCase("да!") || userMessage.equalsIgnoreCase("да?")) {
-                    answer = "Пизда!\uD83D\uDE0E";
+                    answer = "что да?!\uD83D\uDE0E";
                     message.setReplyToMessageId(update.getMessage().getMessageId());
-                } else if (userMessage.equalsIgnoreCase("пизда") || userMessage.equalsIgnoreCase("пизда!")) {
+                } else if (userMessage.equalsIgnoreCase("работаешь?") || userMessage.equalsIgnoreCase("работаешь!")) {
                     answer = "Да!\uD83D\uDE0E";
                     message.setReplyToMessageId(update.getMessage().getMessageId());
                 } else if (userMessage.contains("@" + NAME)) {
@@ -127,7 +124,7 @@ public class ChatBot extends TelegramLongPollingBot {
     public String extractContentFromJson(String jsonResponse) {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(jsonResponse).getAsJsonObject();
-       // System.out.println(json);
+        System.out.println(json);
         String content = json.getAsJsonArray("choices")
                 .get(0)
                 .getAsJsonObject()
