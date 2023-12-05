@@ -41,7 +41,7 @@ public class ChatBot extends TelegramLongPollingBot {
             Message receivedMessage = update.getMessage();
             SendMessage message = new SendMessage();
             String answer = "";
-          //  System.out.println(userMessagxe);
+            //  System.out.println(userMessagxe);
 
             String chatType = receivedMessage.getChat().getType();
             //System.out.println(chatType); /**логирует запросы*/
@@ -87,6 +87,7 @@ public class ChatBot extends TelegramLongPollingBot {
         }
 
     }
+
     public String getGPT4Response(String prompt) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
