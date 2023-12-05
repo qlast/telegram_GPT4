@@ -36,9 +36,10 @@ public class Properties {
             nameBot = property.getProperty("name_bot");
             allowedUsers = Long.parseLong(property.getProperty("allowed_users"));
 
-            System.out.println(" telegramToken: " + telegramToken
-                    + " openAiToken: " + openAiToken
-                    + " nameBot: " + nameBot + " allowedUsers: " + allowedUsers);
+            System.out.println("Токен Telegram бота: "+ telegramToken);
+            System.out.println("Токен OpenAi: "+ openAiToken);
+            System.out.println("Имя бота: "+ nameBot);
+            System.out.println("ID юзера в Телеграмме: "+ allowedUsers);
 
         } catch (IOException e) {
             System.err.println("ОШИБКА: Файл свойств отсуствует!");

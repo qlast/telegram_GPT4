@@ -74,7 +74,7 @@ public class ChatBot extends TelegramLongPollingBot {
 
 
             if (!answer.isEmpty()) {
-//                System.out.println(answer);
+                //System.out.println(answer);
                 message.setChatId(update.getMessage().getChatId());
                 message.setText(answer);
 
