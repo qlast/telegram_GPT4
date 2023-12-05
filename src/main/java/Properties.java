@@ -41,7 +41,7 @@ public class Properties {
                     + " nameBot: " + nameBot + " allowedUsers: " + allowedUsers);
 
         } catch (IOException e) {
-            System.err.println("ОШИБКА: Файл свойств отсуствует!");
+            System.err.println("ОШИБКА: Файл 'config.properties' c параметрами отсуствует!");
         }
 
     }
